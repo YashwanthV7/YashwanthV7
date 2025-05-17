@@ -2,8 +2,8 @@ name: Medium Sync
 
 on:
   schedule:
-    - cron: "0 12 * * 0"  # Every Sunday at 12:00 UTC
-  workflow_dispatch:       # Manual trigger
+    - cron: "0 12 * * 0"
+  workflow_dispatch:
 
 jobs:
   sync_medium:
@@ -11,6 +11,16 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+
+      - name: Debug Info
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          echo "Current branch:"
+          git branch
+          echo "Repository:"
+          echo ${{ github.repository }}
+          echo "Token present: ${TOKEN:+Yes}"
 
       - name: Set up Python
         uses: actions/setup-python@v4
