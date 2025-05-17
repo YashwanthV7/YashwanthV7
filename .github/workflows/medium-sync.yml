@@ -2,38 +2,29 @@ name: Medium Sync
 
 on:
   schedule:
-    - cron: "0 12 * * 0"
-  workflow_dispatch:
+    - cron: "0 12 * * 0"  # Every Sunday at 12:00 UTC
+  workflow_dispatch:       # Allow manual run
 
 jobs:
   sync_medium:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
 
-      - name: Debug Info
-        env:
-          TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          echo "Current branch:"
-          git branch
-          echo "Repository:"
-          echo ${{ github.repository }}
-          echo "Token present: ${TOKEN:+Yes}"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.x
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pip install feedparser markdownify
 
-      - name: Run Medium to MD script
+      - name: Run Medium to Markdown script
         run: python scripts/medium_to_md.py
 
-      - name: Commit and Push
+      - name: Commit and push changes
         env:
           TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
